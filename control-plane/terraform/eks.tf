@@ -55,6 +55,16 @@ resource "aws_eks_cluster" "demo_eks" {
   ]
 }
 
-data "aws_eks_cluster" "demo_aks" {
+data "tls_certificate" "demo_eks" {
+  url = aws_eks_cluster.demo_eks.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "demo_eks" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.demo_eks.certificates[0].sha1_fingerprint]
+  url             = data.tls_certificate.demo_eks.url
+}
+
+data "aws_eks_cluster" "demo_eks" {
   name = aws_eks_cluster.demo_eks.name
 }
