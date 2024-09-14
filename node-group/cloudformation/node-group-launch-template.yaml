@@ -40,7 +40,7 @@ Resources:
             VolumeType: gp3
             Encrypted: true
           DeviceName: /dev/xvda
-        KeyName: demo-eks
+        KeyName: eks_kp
         SecurityGroupIds:
           - !Ref NodeSecurityGroupId
         TagSpecifications:
