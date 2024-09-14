@@ -1,0 +1,79 @@
+Parameters:
+  ClusterName:
+    Description: Name of a cluster
+    Type: String
+  NodeRole:
+    Description: Node role to be assumed
+    Type: String
+  ScalingConfigDesiredSize:
+    Description: The current number of nodes that the managed node group should maintain.
+    Type: String
+  ScalingConfigMaxSize:
+    Description: The maximum number of nodes that the managed node group can scale out to.
+    Type: String
+  ScalingConfigMinSize:
+    Description: The minimum number of nodes that the managed node group can scale in to.
+    Type: String
+  Subnets:
+    Description: Node subnets
+    Type: CommaDelimitedList
+  Taint:
+    Description: Flag to Use NO_SCHEDULE Taint
+    Type: String
+  NodeSecurityGroupId:
+    Description: Id of default node security group
+    Type: String
+Conditions:
+  UseTaint: !Equals [ !Ref Taint, "true" ]
+
+Transform: AWS::LanguageExtensions
+
+Resources:
+  LaunchTemplate:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateData:
+        InstanceType: t3.medium
+        BlockDeviceMappings:
+        - Ebs:
+            VolumeSize: 30
+            VolumeType: gp3
+            Encrypted: true
+          DeviceName: /dev/xvda
+        KeyName: demo-eks
+        SecurityGroupIds:
+          - !Ref NodeSecurityGroupId
+        TagSpecifications:
+          - ResourceType: "instance"
+            Tags:
+              - Key: "Name"
+                Value: !Ref "AWS::StackName"
+  NodeGroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      Taints:
+        !If
+      - UseTaint
+      - - Effect: NO_SCHEDULE
+          Key: node.kubernetes.io/nodeUpgrade
+      - !Ref "AWS::NoValue"
+      ClusterName: !Ref ClusterName
+      NodeRole: !Ref NodeRole
+      Subnets: !Ref Subnets
+      NodegroupName: !Ref "AWS::StackName"
+      LaunchTemplate:
+        Id: !Ref LaunchTemplate
+      AmiType: AL2_x86_64
+      Tags:
+        Cluster: k8s
+        Created_By: CloudFormation
+        Name: !Ref ClusterName
+      CapacityType: ON_DEMAND
+      ScalingConfig:
+        DesiredSize: !Ref ScalingConfigDesiredSize
+        MaxSize: !Ref ScalingConfigMaxSize
+        MinSize: !Ref ScalingConfigMinSize
+      Labels:
+        node: general
+      UpdateConfig:
+        MaxUnavailable: 1

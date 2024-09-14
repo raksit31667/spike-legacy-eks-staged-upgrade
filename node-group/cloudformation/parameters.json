@@ -1,0 +1,34 @@
+[
+    {
+        "ParameterKey": "ScalingConfigMinSize",
+        "ParameterValue": "3"
+    },
+    {
+        "ParameterKey": "NodeRole",
+        "ParameterValue": "arn:aws:iam::564702493239:role/eks-demo-node"
+    },
+    {
+        "ParameterKey": "Subnets",
+        "ParameterValue": "subnet-08ed31429d8b2ffea,subnet-03e3554d3278ed23f,subnet-019765d70f8c8efd8"
+    },
+    {
+        "ParameterKey": "ClusterName",
+        "ParameterValue": "demo-eks"
+    },
+    {
+        "ParameterKey": "NodeSecurityGroupId",
+        "ParameterValue": "sg-07b1731e0021fbbe8"
+    },
+    {
+        "ParameterKey": "ScalingConfigDesiredSize",
+        "ParameterValue": "3"
+    },
+    {
+        "ParameterKey": "ScalingConfigMaxSize",
+        "ParameterValue": "3"
+    },
+    {
+        "ParameterKey": "Taint",
+        "ParameterValue": "false"
+    }
+]
