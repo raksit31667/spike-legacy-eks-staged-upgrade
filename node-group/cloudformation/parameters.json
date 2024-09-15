@@ -17,7 +17,7 @@
     },
     {
         "ParameterKey": "NodeSecurityGroupId",
-        "ParameterValue": "sg-07b1731e0021fbbe8"
+        "ParameterValue": "sg-088993d9a0fa324ee"
     },
     {
         "ParameterKey": "ScalingConfigDesiredSize",
