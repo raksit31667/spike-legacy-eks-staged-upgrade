@@ -21,6 +21,13 @@ create-node-group:
   --parameters file://node-group/cloudformation/parameters.json \
   --capabilities CAPABILITY_AUTO_EXPAND
 
+.PHONY: update-node-group
+update-node-group:
+	@aws cloudformation update-stack --stack-name ${name} \
+  --template-body file://node-group/cloudformation/node-group-launch-template.yaml \
+  --parameters file://node-group/cloudformation/parameters.json \
+  --capabilities CAPABILITY_AUTO_EXPAND
+
 .PHONY: delete-node-group
 delete-node-group:
 	@aws cloudformation delete-stack --stack-name ${name}
