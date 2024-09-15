@@ -38,3 +38,7 @@ data "aws_subnets" "public" {
 data "aws_ssm_parameter" "node_ami" {
   name = "/aws/service/eks/optimized-ami/1.24/amazon-linux-2/recommended/image_id"
 }
+
+output "Subnets" {
+  value = data.aws_subnets.public.ids
+}
