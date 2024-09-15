@@ -1,0 +1,35 @@
+name: Demo EKS Node Group Provision (v1.25)
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/demo-eks-node-group-v125-provision.yaml'
+      - 'node-group/cloudformation/*'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  eks-node-group-provision:
+    name: EKS Node Group Provision
+    runs-on: ubuntu-latest
+    environment: raksit31667
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::564702493239:role/GitHubActionsOIDCRole
+          aws-region: ap-southeast-1
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: demo-eks-node-group-v125
+          capabilities: "CAPABILITY_AUTO_EXPAND"
+          template: node-group/cloudformation/node-group-launch-template.yaml
+          no-fail-on-empty-changeset: "1"
+          parameter-overrides: "file:///${{ github.workspace }}/node-group/cloudformation/parameters.json"
